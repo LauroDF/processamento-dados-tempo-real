@@ -112,6 +112,11 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: flink-jobmanager
     command: jobmanager
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 8081 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
   
   flink-taskmanager:
     image: fahadkalil/my-flink
@@ -239,6 +244,17 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
+    restart: unless-stopped
+
+  job-submitter:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    container_name: job-submitter
+    depends_on:
+      flink-jobmanager:
+        condition: service_healthy
+    command: flink run -m flink-jobmanager:8081 -py /opt/flink/pipeline/transacao_jobpipeline.py
     restart: unless-stopped
 
 volumes:

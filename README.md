@@ -79,7 +79,7 @@ docker ps
 
 # Etapa Implementada - Produtor Kafka
 
-Responsável: Aluno 1
+Responsável: Aluno 1 (Lauro)
 
 Foi implementado um produtor em Python responsável por gerar transações sintéticas continuamente e enviá-las para o Kafka.
 
@@ -156,57 +156,21 @@ As mensagens devem aparecer continuamente.
 
 ---
 
-# Orientações para os próximos integrantes
+## Aluno 2 - Flink + Valkey (Gabriel M.)
 
-## Aluno 2 - Flink
-
-Consumir o tópico:
-
-```text
-vendas_raw
-```
-
-Estrutura dos dados:
-
-```json
-{
-  "id_transacao": "...",
-  "id_cliente": 123,
-  "valor_total": 1000.00,
-  "categoria": "Eletrônicos",
-  "timestamp": "..."
-}
-```
-
-Exemplo de regra de negócio:
-
-```python
-valor_total > 500
-```
-
-Resultado esperado:
-
-* Identificar transações suspeitas.
-* Enviar alertas para o Valkey.
+- Foi consumidos os dados do Kafka no tópicon: vendas_raw
+- São filtrados apenas valores maiores que 500 e direcionados para o Valkey
+- Foi criado o arquivo `transacao_jobpipeline.py` dentro da pasta 'pipeline'
 
 ---
 
-## Aluno 3 - Valkey (Redis)
+# Orientações para os próximos integrantes
 
-Conectar ao serviço:
+## Aluno 3 - MongoDB (Pedro Tronco)
+...
 
-```text
-Host: valkey
-Porta: 6379
-```
-
-Armazenar os alertas recebidos do Flink.
-
-Validar utilizando:
-
-```text
-http://localhost:5540
-```
+## Aluno 4 - Airflow + Postgres (Felipe Bacchi)
+...
 
 ---
 

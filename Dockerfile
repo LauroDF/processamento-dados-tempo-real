@@ -26,6 +26,7 @@ RUN set -ex; \
 WORKDIR /opt/flink
 COPY --chown=flink:flink ./connectors/*.jar ./lib
 COPY --chown=flink:flink ./formats/*.jar ./lib
+COPY --chown=flink:flink ./pipeline/ ./pipeline
 
 COPY --chown=flink:flink ./binaries/*.tar.gz /tmp
 RUN find /tmp -name 'flink*.tar.gz' -exec tar -xzvf {} -C /root/ \;
