@@ -158,7 +158,7 @@ As mensagens devem aparecer continuamente.
 
 ## Aluno 2 - Flink + Valkey (Gabriel M.)
 
-- Foi consumidos os dados do Kafka no tópicon: vendas_raw
+- Foram consumidos os dados do Kafka no tópico: 'vendas_raw'
 - São filtrados apenas valores maiores que 500 e direcionados para o Valkey
 - Foi criado o arquivo `transacao_jobpipeline.py` dentro da pasta 'pipeline'
 
