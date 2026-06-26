@@ -257,6 +257,19 @@ services:
     command: flink run -m flink-jobmanager:8081 -py /opt/flink/pipeline/transacao_jobpipeline.py
     restart: unless-stopped
 
+  data-lake:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: data-lake
+    depends_on:
+      mongo:
+        condition: service_started
+      flink-jobmanager:
+        condition: service_healthy
+    command: flink run -m flink-jobmanager:8081 -py /opt/flink/pipeline/datalake_jobpipeline.py
+    restart: unless-stopped
+
 volumes:
   kafka_data:
   kafka_secrets:

@@ -164,10 +164,37 @@ As mensagens devem aparecer continuamente.
 
 ---
 
-# Orientações para os próximos integrantes
-
 ## Aluno 3 - MongoDB (Pedro Tronco)
-...
+
+- Criado arquivo [`pipeline/datalake_jobpipeline.py`](/pipeline/datalake_jobpipeline.py) para fazer a conexão por pyflink
+- Alterado [`docker-compose.yml`](docker-compose.yml) para rodar arquivo do pipeline pelo container `flink-jobmanager` no startup
+- Criados Database `transacoes` e Collection `dados_brutos` no mongodb
+
+### Para validar o data-lake:
+
+1- Acessar: [`http://localhost:8082/db/transacoes/dados_brutos`](http://localhost:8082/db/transacoes/dados_brutos)
+
+
+2- Fazer login:
+  - Username: `admin`
+  - Password: `pass`
+
+3- Atualizar página e verificar novos documentos sendo criados.
+
+### Exemplo de documento criado no mongo:
+```json5
+{
+  _id: ObjectId('6a3ddaae01186d4028c958a4'),
+  id_transacao: '060ea2ce-48fb-45c1-80b5-d62fc08c07b7',
+  id_cliente: 49,
+  valor_total: 258.6099853515625,
+  categoria: 'Casa',
+  timestamp: '2026-06-26T01:49:33.646672+00:00'
+}
+```
+
+---
+# Orientações para os próximos integrantes
 
 ## Aluno 4 - Airflow + Postgres (Felipe Bacchi)
 ...
