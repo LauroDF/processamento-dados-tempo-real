@@ -194,10 +194,29 @@ As mensagens devem aparecer continuamente.
 ```
 
 ---
-# Orientações para os próximos integrantes
-
 ## Aluno 4 - Airflow + Postgres (Felipe Bacchi)
-...
+
+* Foi adicionado o ecossistema do **Apache Airflow** (Webserver e Scheduler) ao arquivo `docker-compose.yml`.
+* Foi criada a DAG `faturamento_categoria_dag` no arquivo [`dags/faturamento_dag.py`](dags/faturamento_dag.py).
+* A DAG é disparada a cada **2 minutos** (em lote) para:
+  1. Ler dados brutos do MongoDB (database `transacoes`, collection `dados_brutos`).
+  2. Agregar o faturamento total e quantidade de transações por categoria de produto em Python.
+  3. Realizar um `upsert` na tabela relacional `faturamento_categoria` no PostgreSQL (banco `bigdata`).
+
+### Para validar a orquestração e agregação:
+
+1. **Acessar a Airflow UI**:
+   * URL: [`http://localhost:8089`](http://localhost:8080)
+   * Credenciais: Usuário `admin` / Senha `admin`
+   * Ative a DAG `faturamento_categoria_dag` no painel.
+
+2. **Verificar os dados no PostgreSQL**:
+   * Abra o pgAdmin no navegador: [`http://localhost:8084`](http://localhost:8084) (ou utilize o DBeaver/outro cliente na porta externa `5434`, banco `bigdata`, usuário `admin`, senha `admin`).
+   * Execute a seguinte consulta SQL:
+     ```sql
+     SELECT * FROM faturamento_categoria ORDER BY faturamento_total DESC;
+     ```
+   * Verifique se as categorias de vendas (ex.: `Eletrônicos`, `Livros`, `Roupas`, etc.) estão sendo atualizadas com o faturamento correto acumulado a partir do MongoDB.
 
 ---
 

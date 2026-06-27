@@ -270,6 +270,48 @@ services:
     command: flink run -m flink-jobmanager:8081 -py /opt/flink/pipeline/datalake_jobpipeline.py
     restart: unless-stopped
 
+  airflow-webserver:
+    image: apache/airflow:2.7.2
+    container_name: airflow-webserver
+    # Atualizado para db migrate conforme exigido pelo Airflow 2.7.2
+    entrypoint: /bin/bash -c "airflow db migrate && (airflow users create --username admin --firstname Admin --lastname Admin --role Admin --email admin@example.com --password admin || true) && airflow webserver"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    ports:
+      - "8089:8080"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://admin:admin@postgres:5432/bigdata
+      - AIRFLOW__WEBSERVER__WORKERS=1
+      - AIRFLOW__WEBSERVER__WEB_SERVER_MASTER_TIMEOUT=300
+      - AIRFLOW__WEBSERVER__WORKER_TIMEOUT=300
+      - _PIP_ADDITIONAL_REQUIREMENTS=pymongo psycopg2-binary
+    restart: unless-stopped
+
+  airflow-scheduler:
+    image: apache/airflow:2.7.2
+    container_name: airflow-scheduler
+    command: scheduler
+    depends_on:
+      airflow-webserver:
+        condition: service_started
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://admin:admin@postgres:5432/bigdata
+      - _PIP_ADDITIONAL_REQUIREMENTS=pymongo psycopg2-binary
+    restart: unless-stopped
+
 volumes:
   kafka_data:
   kafka_secrets:
